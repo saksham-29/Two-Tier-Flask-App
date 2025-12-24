@@ -42,17 +42,19 @@ Tools & Technologies Used:
 
 
 Project Structure:
-    .
-    ├── app.py
-    ├── requirement.txt
-    ├── Dockerfile
-    ├── docker-compose.yml
-    ├── templates/
-    │   └── index.html
-    ├── .github/
-    │   └── workflows/
-    │       └── github-actions.yml
-    └── README.md
+
+.
+├── app.py
+├── requirement.txt
+├── Dockerfile
+├── docker-compose.yml
+├── templates/
+│   └── index.html
+├── .github/
+│   └── workflows/
+│       └── github-actions.yml
+└── README.md
+
 
 
 How the Application Works:
