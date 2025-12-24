@@ -1,11 +1,7 @@
 Two Tier Flask Application with Docker and Automated CI/CD Using GitHub Actions on AWS
 
-Author: Saksham Saxena
-Date: December 24, 2025
 
-This project demonstrates a production-style two-tier web application built using Flask and MySQL, containerized with Docker, orchestrated using Docker Compose, and deployed automatically to AWS EC2 through a GitHub Actions CI/CD pipeline.
-
-The primary objective of this project is to showcase real-world DevOps practices, including containerization, automation, and cloud deployment.
+This project demonstrates a two-tier web application built using Flask and MySQL, containerized with Docker, orchestrated using Docker Compose, and deployed automatically to AWS EC2 through a GitHub Actions CI/CD pipeline.
 
 
 Architecture Overview:
@@ -30,9 +26,6 @@ Tools & Technologies Used:
     Application
     │
     ├── Backend (Flask + Python)
-    │   ├── Routes
-    │   ├── Business logic
-    │   ├── Database access
     │
     ├── Database (MySQL)
     │
