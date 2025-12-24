@@ -41,7 +41,7 @@ Tools & Technologies Used:
     └── CI/CD (GitHub Actions)
 
 
-Project Structure:
+## Project Structure
 
 .
 ├── app.py
@@ -54,7 +54,6 @@ Project Structure:
 │   └── workflows/
 │       └── github-actions.yml
 └── README.md
-
 
 
 How the Application Works:
