@@ -46,8 +46,16 @@ Project Structure:
 ```text
 .
 ├── app.py
+├── requirement.txt
 ├── Dockerfile
+├── docker-compose.yml
+├── templates/
+│   └── index.html
+├── .github/
+│   └── workflows/
+│       └── github-actions.yml
 └── README.md
+
 ```
 
 
