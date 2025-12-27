@@ -1,7 +1,6 @@
 from flask import Flask, render_template
 from flask_mysqldb import MySQL
 import os
-import time
 
 app = Flask(__name__)
 
@@ -19,6 +18,7 @@ mysql = MySQL(app)
 # -------------------------
 # Routes
 # -------------------------
+
 @app.route("/")
 def index():
     messages = []
