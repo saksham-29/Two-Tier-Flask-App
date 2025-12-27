@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  mysql:
+    container_name: mysql_container
+    image: mysql:8.0
+    env_file:
+      - ../.env
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - two-tier
+    restart: always
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    deploy: 
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 1G
+
+  flask:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: flask_container
+    env_file:
+      - ../.env
+    ports:
+    - "5000:5000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - two-tier
+    restart: always
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; s=socket.socket(); s.connect(('localhost', 5000))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+volumes:
+  mysql-data:
+
+networks:
+  two-tier:
+    driver: bridge
