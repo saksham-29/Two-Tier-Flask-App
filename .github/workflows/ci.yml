@@ -1,4 +1,4 @@
-name: CI - Build & Push Image to ECR
+name: CI - Build & Push Image to Docker Hub
 
 on:
   push:
@@ -13,24 +13,18 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Login to Amazon ECR
-        uses: aws-actions/amazon-ecr-login@v2
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push Docker image
         env:
-          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_REPOSITORY: ${{ secrets.DOCKERHUB_REPOSITORY }}
         run: |
-          IMAGE_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY
+          IMAGE_NAME=$DOCKERHUB_USERNAME/$DOCKERHUB_REPOSITORY
 
-          docker build -f docker/Dockerfile -t $IMAGE_URI:latest .
-          docker push $IMAGE_URI:latest
-          echo "Docker image pushed to ECR: $IMAGE_URI:latest"
+          docker build -f docker/Dockerfile -t $IMAGE_NAME:main .
+          docker push $IMAGE_NAME:main
