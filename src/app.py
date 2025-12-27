@@ -15,9 +15,6 @@ app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 mysql = MySQL(app)
 
-# -------------------------
-# Routes
-# -------------------------
 
 @app.route("/")
 def index():
