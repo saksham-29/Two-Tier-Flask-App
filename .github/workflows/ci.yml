@@ -28,3 +28,14 @@ jobs:
 
           docker build -f docker/Dockerfile -t $IMAGE_NAME:main .
           docker push $IMAGE_NAME:main
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/two-tier-app
+            docker compose pull
+            docker compose up -d
