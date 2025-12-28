@@ -14,11 +14,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        /* This helps keep images sharp on high-res screens */
-        .sharp-img {
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
-        }
         html { scroll-behavior: smooth; }
     </style>
 </head>
@@ -34,23 +29,16 @@
         <a href="#" class="bg-indigo-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-indigo-700 transition shadow-lg shadow-indigo-200">Get Started</a>
     </nav>
 
-    <header class="max-w-7xl mx-auto px-8 py-20 text-center">
+    <header class="max-w-7xl mx-auto px-8 py-24 md:py-32 text-center">
         <h1 class="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight">
             Deploy your apps <br><span class="gradient-text">faster than ever.</span>
         </h1>
-        <p class="text-lg text-slate-600 mb-10 max-w-2xl mx-auto">
+        <p class="text-lg text-slate-600 mb-10 max-w-2xl mx-auto italic">
             The all-in-one platform for developers to build, deploy, and scale 3-tier applications with zero friction.
         </p>
         <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4">
             <button class="bg-slate-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-slate-800 transition">Start Free Trial</button>
             <button class="border border-slate-300 px-8 py-4 rounded-xl font-bold hover:bg-slate-100 transition">View Demo</button>
-        </div>
-        
-        <div class="mt-16 bg-white p-2 md:p-4 rounded-2xl shadow-2xl border border-slate-200 max-w-5xl mx-auto">
-            <img src="image.png" 
-                 alt="App Dashboard Preview" 
-                 class="rounded-lg w-full h-auto object-cover border border-slate-100 sharp-img" 
-                 style="max-height: 600px; object-fit: contain; background-color: #f8fafc;">
         </div>
     </header>
 
