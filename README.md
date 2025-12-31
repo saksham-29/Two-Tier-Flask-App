@@ -1,125 +1,233 @@
-Two Tier Flask Application with Docker and Automated CI/CD Using GitHub Actions on AWS
+**Two-Tier Flask Application Deployment on AWS EC2 with Docker, NGINX, and HTTPS**
+---
 
+# Two-Tier Flask Application (Dockerized)
 
-This project demonstrates a two-tier web application built using Flask and MySQL, containerized with Docker, orchestrated using Docker Compose, and deployed automatically to AWS EC2 through a GitHub Actions CI/CD pipeline.
+This repository contains a **two-tier Flask web application** backed by **MySQL**, fully containerized using **Docker and Docker Compose**. The application is developed locally and pushed to GitHub, while production deployment is intended on an **AWS EC2 instance** using **NGINX as a reverse proxy with HTTPS (TLS)**.
 
+> **Important Notes**
+>
+> * `Dockerfile` and `docker-compose.yml` are located inside the **`docker/` directory**
+> * Application source code resides in **`src/`**
+> * **NGINX and HTTPS configuration on EC2 are currently not included in the repository** but are documented below for deployment reference
 
-Architecture Overview:
+---
 
-
-    Developer Push (main)
-            |
-            v
-    GitHub Actions (CI/CD)
-            |
-            v
-    AWS EC2 (Ubuntu)
-            |
-            v
-    Docker Compose
-    ├── Flask Application (Port 5000)
-    └── MySQL Database (Persistent Volume)
-
-
-Tools & Technologies Used:
-
-    Application
-    │
-    ├── Backend (Flask + Python)
-    │
-    ├── Database (MySQL)
-    │
-    ├── Infrastructure (Docker, EC2)
-    │
-    └── CI/CD (GitHub Actions)
-
-
-Project Structure:
-
-```text
-.
-├── app.py
-├── requirement.txt
-├── Dockerfile
-├── docker-compose.yml
-├── templates/
-│   └── index.html
-├── .github/
-│   └── workflows/
-│       └── github-actions.yml
-└── README.md
+## Architecture Overview
 
 ```
+Client (Browser)
+      |
+   HTTPS (443)
+      |
+   NGINX (EC2 Host)
+      |
+ Docker Network
+ ┌───────────────┐        ┌───────────────┐
+ | Flask App     | <----> | MySQL DB       |
+ | (Container)   |        | (Container)   |
+ └───────────────┘        └───────────────┘
+```
+
+---
+
+## Technology Stack
+
+* **Backend:** Flask (Python)
+* **Templates:** Jinja2 (`templates/index.html`)
+* **Database:** MySQL
+* **Containerization:** Docker
+* **Orchestration:** Docker Compose
+* **Reverse Proxy (Production):** NGINX
+* **Security:** HTTPS (Let’s Encrypt / Certbot)
+* **Cloud:** AWS EC2
+* **CI/CD:** GitHub Actions
+
+---
+
+## Project Structure
+
+```
+.
+├── docker/
+│   ├── Dockerfile
+│   └── docker-compose.yml
+│
+├── src/
+│   ├── app.py
+│   ├── requirements.txt
+│   └── templates/
+│       └── index.html
+│
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+│
+├── message.sql
+└── README.md
+```
+
+---
+
+## Prerequisites
+
+### Local Development
+
+* Docker
+* Docker Compose
+* Git
+
+### Production (EC2)
+
+* Ubuntu EC2 instance
+* Security group ports open:
+
+  * `22` – SSH
+  * `80` – HTTP
+  * `443` – HTTPS
+* Domain name (recommended for HTTPS)
+
+---
+
+## Local Development Setup
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/saksham-29/Two-Tier-Flask-App.git
+cd Two-Tier-Flask-App
+```
+
+### 2. Build and Run Containers
+
+```bash
+cd docker
+docker compose up --build -d
+```
+
+### 3. Access the Application
+
+```text
+http://localhost:5000
+```
+
+The Flask app renders `templates/index.html` using Jinja2.
+
+---
+
+## Application Details
+
+### Flask Application
+
+* Entry point: `src/app.py`
+* Dependencies: `src/requirements.txt`
+* HTML Templates: `src/templates/index.html`
+
+Flask runs inside a Docker container and communicates with MySQL using the Docker network defined in `docker-compose.yml`.
+
+---
+
+## Database
+
+* MySQL runs as a separate Docker container
+* Database schema is provided in:
+
+```text
+message.sql
+```
+
+This file initializes required tables for the application.
+
+---
+
+## EC2 Deployment (Docker Compose + NGINX + HTTPS)
+
+> The following steps describe the **production setup**.
+> These configurations are **not yet committed** to the repository.
+
+---
+
+### EC2 Setup
+
+```bash
+sudo apt update
+sudo apt install -y docker.io docker-compose git
+sudo systemctl enable docker
+sudo systemctl start docker
+```
+
+Clone and start the application:
+
+```bash
+git clone https://github.com/saksham-29/Two-Tier-Flask-App.git
+cd Two-Tier-Flask-App/docker
+docker compose up --build -d
+```
+
+---
+
+## NGINX Reverse Proxy (Production)
+
+NGINX runs on the **EC2 host** and forwards traffic to the Flask container.
+
+### Sample NGINX Configuration
+
+```nginx
+server {
+    listen 80;
+    server_name YOUR_DOMAIN_OR_EC2_IP;
+
+    location / {
+        proxy_pass http://127.0.0.1:5000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
+---
+
+## HTTPS (TLS) with Let’s Encrypt
+
+Install Certbot:
+
+```bash
+sudo apt install certbot python3-certbot-nginx
+```
+
+Generate SSL certificates:
+
+```bash
+sudo certbot --nginx \
+  --non-interactive \
+  --agree-tos \
+  -m your-email@example.com \
+  -d yourdomain.com
+```
+
+Certbot will:
+
+* Enable HTTPS
+* Redirect HTTP → HTTPS
+* Auto-renew certificates
+
+---
 
 
-How the Application Works:
+## Environment Variables
 
-    1. Flask handles incoming HTTP requests and serves the web interface
+Environment variables are defined in `docker/docker-compose.yml`.
 
-    2. MySQL stores application data
+Example:
 
-    3. Flask connects to MySQL using Docker’s internal networking
+```env
+MYSQL_ROOT_PASSWORD=securepassword
+MYSQL_DATABASE=flaskdb
+```
 
-    4. Docker Compose manages the lifecycle of multiple containers
+For production:
 
-    5. MySQL data is persisted using Docker volumes
+* Use `.env` (excluded via `.gitignore`)
+* Or AWS Secrets Manager (recommended)
 
-
-CI/CD Pipeline Workflow:
-
-    1. Code is pushed to the main branch
-
-    2. GitHub Actions workflow is triggered automatically
-
-    3. Repository source code is checked out on the runner
-
-    4. Pipeline connects securely to AWS EC2 using SSH
-
-    5. Latest code is pulled on EC2
-
-    6. Existing containers are stopped
-
-    7. Docker images are rebuilt
-
-    8. Containers are started using Docker Compose
-
-    9. Application is deployed automatically
-
-
-Application Access:
-
-    After deployment, the application is available at:
-    http://<EC2_PUBLIC_IP>:5000
-
-    Health check endpoint:
-    http://<EC2_PUBLIC_IP>:5000/health
-
-
-Key Features:
-
-    1. Two-tier architecture (Application + Database)
-
-    2. Dockerized services managed with Docker Compose
-
-    3. Persistent MySQL data using Docker volumes
-
-    4. Automated CI/CD pipeline using GitHub Actions
-
-    5. Health checks for application and database
-
-    6. Restart policies for reliability
-
-    7. No manual deployment after initial setup
-
-
-Security & Best Practices:
-
-    1. No credentials committed to source control
-
-    2. SSH access handled securely via GitHub Secrets
-
-    3. Containers communicate over an isolated Docker network
-
-    4. Database accessible only within the Docker network
-
-    5. Version-controlled CI/CD workflows
+---
