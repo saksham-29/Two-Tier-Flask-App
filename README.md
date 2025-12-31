@@ -1,9 +1,7 @@
-**Two-Tier Flask Application Deployment on AWS EC2 with Docker, NGINX, and HTTPS**
+## Two-Tier Flask Application
 ---
 
-# Two-Tier Flask Application (Dockerized)
-
-This repository contains a **two-tier Flask web application** backed by **MySQL**, fully containerized using **Docker and Docker Compose**. The application is developed locally and pushed to GitHub, while production deployment is intended on an **AWS EC2 instance** using **NGINX as a reverse proxy with HTTPS (TLS)**.
+Two-tier Flask web application deployed on AWS EC2 using Docker and NGINX, secured with HTTPS, with CI/CD automation implemented using GitHub Actions.
 
 > **Important Notes**
 >
